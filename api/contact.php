@@ -25,7 +25,7 @@ $submitted_at = date('Y-m-d H:i:s');
 
 // Insert into contact_messages
 $result = pg_query_params($conn,
-    "INSERT INTO contact_messages (name, email, message, submitted_at) VALUES ($1, $2, $3, $4) RETURNING id",
+    "INSERT INTO contact_messages (name, email, message_new, submitted_at) VALUES ($1, $2, $3, $4) RETURNING id",
     [$name, $email, $message, $submitted_at]
 );
 
