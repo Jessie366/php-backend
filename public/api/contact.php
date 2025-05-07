@@ -1,8 +1,7 @@
 <?php
-// CORS headers (重要！解决跨域问题)
-header('Access-Control-Allow-Origin: *');  // 允许任何域访问
-header('Access-Control-Allow-Methods: POST, OPTIONS');  // 允许的方法
-header('Access-Control-Allow-Headers: Content-Type');  // 允许的 header 类型
+header('Access-Control-Allow-Origin: *');  // permits any domian to access the resource
+header('Access-Control-Allow-Methods: POST, OPTIONS');  // permits POST and OPTIONS methods
+header('Access-Control-Allow-Headers: Content-Type');  // permits content-type header
 header('Content-Type: application/json');
 
 // Handle preflight request for CORS
