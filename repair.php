@@ -21,11 +21,12 @@ $data = json_decode(file_get_contents('php://input'), true);
 $name = $data['name'] ?? '';
 $unit = $data['unit'] ?? '';
 $desc = $data['repairDescription'] ?? '';
+$submitted_at = date('Y-m-d H:i:s');
 
-// Insert into database
+// Insert into database using correct field name: description
 $result = pg_query_params($conn,
-    "INSERT INTO repair_requests (name, unit, repair_description) VALUES ($1, $2, $3) RETURNING id",
-    [$name, $unit, $desc]
+    "INSERT INTO repair_requests (name, unit, description, submitted_at) VALUES ($1, $2, $3, $4) RETURNING id",
+    [$name, $unit, $desc, $submitted_at]
 );
 
 if ($result) {
