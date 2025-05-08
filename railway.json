@@ -1,0 +1,10 @@
+{
+    "build": {
+      "env": {},
+      "builder": "NIXPACKS",
+      "buildCommand": "",
+      "startCommand": "php -S 0.0.0.0:8000"
+    }
+  }
+
+  
