@@ -1,6 +1,13 @@
 <?php
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 $host = 'postgres.railway.internal';
 $db   = 'railway';
@@ -9,15 +16,15 @@ $pass = 'bwYJOeTBobRUOZPaOCEITywQwSlcNrqd';
 $port = '5432';
 
 $conn = pg_connect("host=$host dbname=$db user=$user password=$pass port=$port");
+
 if (!$conn) {
     echo json_encode(["error" => "Failed to connect to the database."]);
     exit;
 }
 
-$result = pg_query($conn, "SELECT * FROM repair_requests ORDER BY id DESC");
+$result = pg_query($conn, "SELECT * FROM repair_requests ORDER BY submitted_at DESC");
 $data = pg_fetch_all($result);
 echo json_encode($data);
-
 pg_close($conn);
 ?>
 
