@@ -29,7 +29,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $name = $data['name'] ?? '';
 $unit = $data['unit'] ?? '';
 $desc = $data['description'] ?? '';
-file_put_contents('php://stderr', "DESC FROM FRONTEND: $desc\n");
+file_put_contents('php://stderr', "DESCRIPTION RECEIVED: [$desc]\n");
 $submitted_at = date('Y-m-d H:i:s');
 
 // ✅ 可选：调试用日志（现在读取完再打印）
