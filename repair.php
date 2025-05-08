@@ -4,13 +4,13 @@ header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
-// ✅ 预检请求
+// ✅ CORS 预检请求处理
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
-// ✅ 数据库配置
+// ✅ 数据库连接配置
 $host = 'postgres.railway.internal';
 $db   = 'railway';
 $user = 'postgres';
@@ -24,17 +24,16 @@ if (!$conn) {
     exit;
 }
 
-// ✅ 正确顺序读取数据
+// ✅ 读取前端发来的 JSON 数据
 $data = json_decode(file_get_contents('php://input'), true);
 $name = $data['name'] ?? '';
 $unit = $data['unit'] ?? '';
 $desc = $data['description'] ?? '';
-file_put_contents('php://stderr', "DESCRIPTION RECEIVED: [$desc]\n");
 $submitted_at = date('Y-m-d H:i:s');
 
-// ✅ 可选：调试用日志（现在读取完再打印）
-file_put_contents('php://stderr', "RECEIVED: " . json_encode($data) . "\n");
-file_put_contents('php://stderr', "DEBUG: description = $desc\n");
+// ✅ 调试输出日志（查看是否读取成功）
+file_put_contents('php://stderr', "DEBUG: JSON = " . json_encode($data) . "\n");
+file_put_contents('php://stderr', "DEBUG: NAME = [$name], UNIT = [$unit], DESC = [$desc]\n");
 
 // ✅ 插入数据
 $result = pg_query_params($conn,
@@ -42,6 +41,7 @@ $result = pg_query_params($conn,
     [$name, $unit, $desc, $submitted_at]
 );
 
+// ✅ 返回结果
 if ($result) {
     $row = pg_fetch_assoc($result);
     echo json_encode([
@@ -53,5 +53,6 @@ if ($result) {
     echo json_encode(["error" => "Database insert failed."]);
 }
 
+// ✅ 关闭连接
 pg_close($conn);
 ?>
