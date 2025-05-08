@@ -30,6 +30,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $name = $data['name'] ?? '';
 $email = $data['email'] ?? '';
 $message = $data['message'] ?? '';
+date_default_timezone_set('Australia/Sydney');
 $submitted_at = date('Y-m-d H:i:s');
 
 // Insert into contact_messages

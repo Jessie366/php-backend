@@ -29,6 +29,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $name = $data['name'] ?? '';
 $unit = $data['unit'] ?? '';
 $desc = $data['description'] ?? '';
+date_default_timezone_set('Australia/Sydney');
 $submitted_at = date('Y-m-d H:i:s');
 
 // ✅ 调试输出日志（查看是否读取成功）
