@@ -32,7 +32,7 @@ file_put_contents('php://stderr', "RECEIVED: " . json_encode($data) . "\n");
 
 $name = $data['name'] ?? '';
 $unit = $data['unit'] ?? '';
-$desc = $data['repairDescription'] ?? '';
+$desc = $data['description'] ?? '';
 $submitted_at = date('Y-m-d H:i:s');
 
 // ✅ 插入数据库（注意字段名是 description，不是 repair_description）
