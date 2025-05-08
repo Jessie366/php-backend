@@ -18,6 +18,7 @@ if (!$conn) {
 
 // Read request body
 $data = json_decode(file_get_contents('php://input'), true);
+file_put_contents('php://stderr', "RECEIVED: " . json_encode($data) . "\n");
 $name = $data['name'] ?? '';
 $unit = $data['unit'] ?? '';
 $desc = $data['repairDescription'] ?? '';
