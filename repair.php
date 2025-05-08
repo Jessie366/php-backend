@@ -38,7 +38,7 @@ file_put_contents('php://stderr', "DEBUG: description = $desc\n");
 
 // ✅ 插入数据
 $result = pg_query_params($conn,
-    "INSERT INTO repair_requests (name, unit, description, submitted_at) VALUES ($1, $2, $3, $4) RETURNING id",
+    "INSERT INTO repair_requests (name, unit, "description", submitted_at) VALUES ($1, $2, $3, $4) RETURNING id",
     [$name, $unit, $desc, $submitted_at]
 );
 
