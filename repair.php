@@ -4,7 +4,7 @@ header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
-// ✅ 预检请求jsbasb xjhas 
+// ✅ 预检请求
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -38,7 +38,7 @@ file_put_contents('php://stderr', "DEBUG: description = $desc\n");
 
 // ✅ 插入数据
 $result = pg_query_params($conn,
-    "INSERT INTO repair_requests (name, unit, "description", submitted_at) VALUES ($1, $2, $3, $4) RETURNING id",
+    "INSERT INTO repair_requests (name, unit, description, submitted_at) VALUES ($1, $2, $3, $4) RETURNING id",
     [$name, $unit, $desc, $submitted_at]
 );
 
