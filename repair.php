@@ -1,35 +1,35 @@
 <?php
-// ✅ 设置响应头（包括 CORS 支持）
+// ✅ Set response headers (including CORS support)
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
-// ✅ 预检请求
+// ✅ Handle preflight request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
-// ✅ 设置时区（澳洲悉尼）
+// ✅ Set timezone (Australia/Sydney)
 date_default_timezone_set('Australia/Sydney');
 file_put_contents('php://stderr', "DEBUG: timezone = " . date_default_timezone_get() . "\n");
 
-// ✅ 数据库连接配置
+// ✅ Database connection config
 $host = 'postgres.railway.internal';
 $db   = 'railway';
 $user = 'postgres';
 $pass = 'bwYJOeTBobRUOZPaOCEITywQwSlcNrqd';
 $port = '5432';
 
-// ✅ 建立连接
+// ✅ Establish connection
 $conn = pg_connect("host=$host dbname=$db user=$user password=$pass port=$port");
 if (!$conn) {
     echo json_encode(["error" => "Failed to connect to the database."]);
     exit;
 }
 
-// ✅ 获取 JSON 数据
+// ✅ Retrieve JSON data
 $data = json_decode(file_get_contents('php://input'), true);
 $name = $data['name'] ?? '';
 $unit = $data['unit'] ?? '';
@@ -38,13 +38,13 @@ $submitted_at = date('Y-m-d H:i:s');
 
 file_put_contents('php://stderr', "DEBUG: NAME = [$name], UNIT = [$unit], DESC = [$desc], TIME = [$submitted_at]\n");
 
-// ✅ 插入数据
+// ✅ Insert data into the database
 $result = pg_query_params($conn,
     "INSERT INTO repair_requests (name, unit, description, submitted_at) VALUES ($1, $2, $3, $4) RETURNING id",
     [$name, $unit, $desc, $submitted_at]
 );
 
-// ✅ 返回响应
+// ✅ Return response
 if ($result) {
     $row = pg_fetch_assoc($result);
     echo json_encode([
