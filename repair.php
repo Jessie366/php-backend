@@ -1,4 +1,7 @@
 <?php
+file_put_contents('php://stderr', "RECEIVED: " . json_encode($data) . "\n");
+file_put_contents('php://stderr', "DEBUG: desc = $desc\n");
+
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
