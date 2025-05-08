@@ -1,41 +1,37 @@
 <?php
-// ✅ CORS headers：允许跨域请求
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
-// ✅ CORS 预检请求（OPTIONS）
+// ✅ Preflight check
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
-// ✅ 数据库配置
+// ✅ Database config
 $host = 'postgres.railway.internal';
 $db   = 'railway';
 $user = 'postgres';
 $pass = 'bwYJOeTBobRUOZPaOCEITywQwSlcNrqd';
 $port = '5432';
 
-// ✅ 建立连接
+// ✅ Connect to DB
 $conn = pg_connect("host=$host dbname=$db user=$user password=$pass port=$port");
-
 if (!$conn) {
     echo json_encode(["error" => "Failed to connect to the database."]);
     exit;
 }
 
-// ✅ 读取表单数据
+// ✅ Read JSON data
 $data = json_decode(file_get_contents('php://input'), true);
-file_put_contents('php://stderr', "RECEIVED: " . json_encode($data) . "\n");
-
 $name = $data['name'] ?? '';
 $unit = $data['unit'] ?? '';
-$desc = $data['description'] ?? '';
+$desc = $data['description'] ?? '';  // ✅ 修正字段名为 description
 $submitted_at = date('Y-m-d H:i:s');
 
-// ✅ 插入数据库（注意字段名是 description，不是 repair_description）
+// ✅ Insert to DB
 $result = pg_query_params($conn,
     "INSERT INTO repair_requests (name, unit, description, submitted_at) VALUES ($1, $2, $3, $4) RETURNING id",
     [$name, $unit, $desc, $submitted_at]
@@ -54,6 +50,5 @@ if ($result) {
     echo json_encode(["error" => "Database insert failed."]);
 }
 
-// ✅ 关闭连接
 pg_close($conn);
 ?>
