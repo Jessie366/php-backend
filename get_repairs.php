@@ -1,30 +1,22 @@
 <?php
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Content-Type: application/json');
+declare(strict_types=1);
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
+require_once __DIR__ . '/auth.php';
+
+configure_cors(['GET', 'OPTIONS']);
+require_method('GET');
+require_admin_auth();
+
+$conn = db_connect();
+$result = pg_query($conn, 'SELECT id, name, unit, description, submitted_at FROM repair_requests ORDER BY submitted_at DESC');
+
+if (!$result) {
+    pg_close($conn);
+    send_json(['error' => 'Database query failed.'], 500);
 }
 
-$host = 'postgres.railway.internal';
-$db   = 'railway';
-$user = 'postgres';
-$pass = 'bwYJOeTBobRUOZPaOCEITywQwSlcNrqd';
-$port = '5432';
-
-$conn = pg_connect("host=$host dbname=$db user=$user password=$pass port=$port");
-
-if (!$conn) {
-    echo json_encode(["error" => "Failed to connect to the database."]);
-    exit;
-}
-
-$result = pg_query($conn, "SELECT * FROM repair_requests ORDER BY submitted_at DESC");
-$data = pg_fetch_all($result);
-echo json_encode($data);
+$data = pg_fetch_all($result) ?: [];
 pg_close($conn);
-?>
 
+send_json($data);
+?>
